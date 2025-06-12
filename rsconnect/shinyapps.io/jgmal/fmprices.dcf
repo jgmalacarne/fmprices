@@ -1,0 +1,12 @@
+name: fmprices
+title: FMprices
+username: jgmal
+account: jgmal
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6678852
+bundleId: 10440836
+url: https://jgmal.shinyapps.io/fmprices/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
