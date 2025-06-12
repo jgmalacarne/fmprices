@@ -1,0 +1,91 @@
+---
+title: "Maine Farmers Market Price Report - Product Details"
+output: html_document
+params: 
+    marketselect: NA
+    prices: NA
+    productlist: NA
+    yearchoice: NA
+    datafull: NA
+---
+
+```{r,include=FALSE}
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+linetypelist <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
+```
+
+\
+
+# This report was generated on `r Sys.Date()`. 
+
+\
+
+\
+
+```{r, echo = FALSE}
+title.text <- paste("Product Details for",params$productlist,"(",params$marketselect,",",params$prices,")", sep= " ")
+```
+
+# Product details for `r paste(params$productlist,"(",params$marketselect,",",params$prices,")", sep= " ") ` 
+
+\
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+
+producttimedata <- params$datafull %>% 
+      filter(marketregion == params$marketselect) %>%
+      filter(organic == params$prices) %>%
+      filter(product == params$productlist) %>%
+      filter(year %in% params$yearchoice) %>% 
+      mutate(price.num = as.numeric(price))
+    
+helperdata <- params$datafull %>% 
+    filter(product == params$productlist) %>%
+    mutate(price.num = as.numeric(price))
+
+```
+
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+#Make Plot
+ggplot(data = producttimedata, aes(x=month,y=price.num,color = factor(year),linetype=factor(year))) + geom_line(size=1.5) + geom_point() +
+       ylim(0,max(helperdata$price.num, na.rm = TRUE)) + 
+       scale_x_continuous(breaks = c(6,7,8,9,10), labels = c("Jun","Jul","Aug","Sept","Oct")) +
+       scale_color_manual(values=c("2022" = cbPalette[1], "2023" = cbPalette[2], "2024" = cbPalette[3], "2025" = cbPalette[4]),name="Year") + 
+       scale_linetype_manual(values=c("2022" = "dotdash", "2023" = "dotted", "2024" = "dashed", "2025" = "solid"), name="Year") +
+       labs(x = "Month", y = "Avg. Price ($)") + 
+       theme(legend.position="bottom")
+```
+
+
+```{r, echo = FALSE, message=FALSE,warning=FALSE}
+# Set up data
+  producttable <- producttimedata %>%
+      arrange(-year,month) %>% 
+      select(`Month`=thismonth, `Region` = marketregion,`Series` = organic, `Product` = product, `Avg. Price` = price, `Min` = min, `Max` = max, `# Rep.` = num.reporting) %>% 
+    knitr::kable("html") %>%
+    kable_styling("striped", full_width = F) %>% 
+    footnote(general = c("(S) indicates that data supressed due to fewer than three reported prices.", "(.) indicates no data available."))
+
+    producttable
+```
+
+
+---
+
+<center>
+![](banner.png){width="100%"}
+</center>
+
+This report is made possible with funding through the Maine Department of Agriculture, Conservation, and Forestry and the support of the Maine Federation of Farmers Markets, Maine Organic Farmers and Gardeners Association, and the Maine Agricultural and Forest Experiment Station at University of Maine. 
+
+\
+
+This work is also supported by the Hatch Act, project award no. 5501357, from the U.S. Department of Agriculture's National Institute of Food and Agriculture. Any opinions, findings, conclusions, or recommendations expressed in this publication are those of the author(s) and should not be construed to represent any official USDA or U.S. Government determination or policy.
+
+\
+
+\
+
+\
+
