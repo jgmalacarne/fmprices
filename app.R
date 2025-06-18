@@ -4,7 +4,7 @@ library(htmlwidgets)
 library(reactable)
 library(scales)
 library(tidyverse)
-
+library(gt)
 
 ## Set up Space
 remove(list = ls())
@@ -88,7 +88,7 @@ navbarPage("Maine Farmers Market Price Report",
                           HTML('<center><img src="map_southern.png" width= "75%" ></center>')
                         ),
                         
-                        tableOutput("reporttable")
+                        gt_output("reporttable")
                         
                         )
                         )),
@@ -150,7 +150,7 @@ navbarPage("Maine Farmers Market Price Report",
                              
                              br(),
                              
-                             tableOutput("producttable")
+                             gt_output("producttable")
                              
                            )
                              )
@@ -206,15 +206,15 @@ server <- function(input, output) {
   })
   
   # Make Table
-  output$reporttable <- function()({
-    reporttabledata() %>% 
-    knitr::kable("html") %>%
-    kable_styling("striped", full_width = F) %>% 
-      footnote(general = c("(S) indicates that data supressed due to fewer than three reported prices.", "(.) indicates no data available."))
-    })
+  output$reporttable <- render_gt({
+      reporttabledata() %>% 
+        gt() %>% 
+        opt_row_striping(row_striping = TRUE) %>% 
+        tab_source_note(source_note = "(S) indicates that data supressed due to fewer than three reported prices." ) %>%
+        tab_source_note(source_note = "(.) indicates no data available.") 
+      })
+    
   
-  
-
   ## Second Page Time Series Plots
   
  
@@ -255,13 +255,17 @@ helperdata <- reactive({
 
   ## Second Page Table
   # Make Table 
-  output$producttable <- function()({
+  output$producttable <- render_gt({
     producttimedata() %>%
       arrange(-year,month) %>% 
       select(`Month`=thismonth, `Region` = marketregion,`Series` = organic, `Product` = product, `Avg. Price` = price, `Min` = min, `Max` = max, `# Rep.` = num.reporting) %>% 
-      knitr::kable("html") %>%
-      kable_styling("striped", full_width = F)
+      gt() %>%
+      opt_row_striping(row_striping = TRUE) %>% 
+      tab_source_note(source_note = "(S) indicates that data supressed due to fewer than three reported prices." ) %>%
+      tab_source_note(source_note = "(.) indicates no data available.") 
   })
+  
+      
 
 
   ## Second Page title

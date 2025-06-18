@@ -52,9 +52,10 @@ monthlabel <- params$monthlist %>% filter(year == params$year & month == params$
 
 # Make Table
   reporttable <- reporttabledata %>% 
-    knitr::kable("html") %>%
-    kable_styling("striped", full_width = F) %>% 
-    footnote(general = c("(S) indicates that data supressed due to fewer than three reported prices.", "(.) indicates no data available."))
+    gt() %>% 
+        opt_row_striping(row_striping = TRUE) %>% 
+        tab_source_note(source_note = "(S) indicates that data supressed due to fewer than three reported prices." ) %>%
+        tab_source_note(source_note = "(.) indicates no data available.") 
 
     reporttable
 ```

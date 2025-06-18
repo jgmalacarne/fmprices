@@ -1,3 +1,0 @@
-libharfbuzz-dev 
-libfribidi-dev 
-libtiff5-dev
