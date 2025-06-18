@@ -3,7 +3,8 @@ library(htmltools)
 library(htmlwidgets)
 library(reactable)
 library(scales)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(gt)
 
 ## Set up Space
