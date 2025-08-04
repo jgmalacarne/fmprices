@@ -5,7 +5,7 @@ account: jgmal
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6678852
-bundleId: 10548841
+bundleId: 10589785
 url: https://jgmal.shinyapps.io/fmprices/
 version: 1
 asMultiple: FALSE
